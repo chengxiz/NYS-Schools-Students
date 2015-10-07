@@ -28,6 +28,10 @@ SchoolList<-list()
 F_R_LunchList<-list()
 EthList<-list()
 EllList<-list()
+BallotList<-list()
+BallotEthList<-list()
+BallotEllList<-list()
+BallotList1<-list()
 AttSchoolList<-group_by(students,School_201)
 ll=0
 for (i in as.numeric(as.matrix(d3a[,1]))){
@@ -53,8 +57,37 @@ for (i in as.numeric(as.matrix(d3a[,1]))){
     group_by(ELL_2015_2) %>%
     summarise(count=n()) %>%
     mutate(freq = 100 * count / sum(count))
+  # number of students from their school zones who balloted (Choice 1, 2 or 3) school 534
+  st_subgpCh1<-filter(students,Choice_1__==i)
+  st_subgpCh2<-filter(students,Choice_2__==i)
+  st_subgpCh3<-filter(students,Choice_3__==i)
+  st_ballot<-rbind(st_subgpCh1,st_subgpCh2,st_subgpCh3)
+  temp<-st_ballot %>%
+    group_by(School_201) %>%
+    summarise(count=n()) %>%
+    mutate(freq = 100 * count / sum(count)) %>%
+    arrange(desc(freq))
+  BallotList[[name]]<-temp
+  BallotList1[[name]]<-filter(temp,School_201==i)
+  remove(temp)
+  #  % ethnic population (this is a count display)
+  BallotEthList[[name]]<-st_ballot %>%
+    filter(School_201==i) %>%
+    group_by(Ethnicity) %>%
+    summarise(count=n()) %>%
+    mutate(freq = 100 * count / sum(count))
+  #  % of ELL
+  BallotEllList[[name]]<-st_ballot %>%
+    group_by(ELL_2015_2) %>%
+    summarise(count=n()) %>%
+    mutate(freq = 100 * count / sum(count))
 }
-
+rm(st_subgp)
+rm(st_ballot)
+rm(st_subgpCh1)
+rm(st_subgpCh2)
+rm(st_subgpCh3)
+###
 #filter(F_R_Lunch=="YES")
 #group_by(Home_Atten) %>%
 # group_by(Home_Att_1) %>%
