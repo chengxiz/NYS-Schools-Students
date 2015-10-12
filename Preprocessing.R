@@ -1,4 +1,5 @@
 # Auothor: Chengxi Zhu
+#thanks for Dr Wilson
 library(dplyr)
 # Import data of schools
 schools <- read.table("Schools.csv", fill=TRUE, sep=",")
